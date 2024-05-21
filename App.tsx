@@ -26,6 +26,9 @@ const metadata = {
   },
 };
 
+
+
+
 // Chains that will be supported by the dApp
 const chains = [sepolia];
 

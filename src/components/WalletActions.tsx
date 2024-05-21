@@ -16,41 +16,31 @@ export default function WalletActions() {
   const { address } = useAccount();
   const [message, setMessage] = useState('');
 
-  // Prepare message to be signed
-  useEffect(() => {
-    if (address) {
-      setMessage(
-        `Sign this message to prove you are the owner of this wallet: ${address}`,
-      );
-    }
-  }, [address]);
-
-  // Ask the wallet to sign a message
   const { data: signedHash, signMessage } = useSignMessage({
-    message,
+    message: 'Sign this message to prove you are the owner of this wallet',
   });
 
   // Ask the wallet to send test MATIC on Polygon Mumbai testnet
-  const { config } = usePrepareSendTransaction({
-    chainId: sepolia.id,
-    // Replace `to` with another address to receive the tokens
-    to: '0xfddD2b8D9aaf04FA583CCF604a2De12668200582',
-    value: parseEther('0.001'),
-  });
-  const { data: txData, sendTransaction } = useSendTransaction(config);
+  // const { config } = usePrepareSendTransaction({
+  //   chainId: sepolia.id,
+  //   // Replace `to` with another address to receive the tokens
+  //   to: '0xfddD2b8D9aaf04FA583CCF604a2De12668200582',
+  //   value: parseEther('0.001'),
+  // });
+  // const { data: txData, sendTransaction } = useSendTransaction(config);
 
-  // Watch for transaction completion and show a success alert when done
-  useWaitForTransaction({
-    chainId: sepolia.id,
-    hash: txData?.hash,
-    onSuccess() {
-      Alert.alert('Transaction succeeded!', '0.001 MATIC sent successfully');
-    },
-  });
+  // // Watch for transaction completion and show a success alert when done
+  // useWaitForTransaction({
+  //   chainId: sepolia.id,
+  //   hash: txData?.hash,
+  //   onSuccess() {
+  //     Alert.alert('Transaction succeeded!', '0.001 MATIC sent successfully');
+  //   },
+  // });
 
   return (
     <>
-      {signedHash && (
+       {signedHash && (
         <View style={styles.block}>
           <Text>Signature hash: {signedHash}</Text>
         </View>

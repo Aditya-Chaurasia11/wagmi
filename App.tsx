@@ -9,7 +9,7 @@ import {
   Web3Modal,
 } from '@web3modal/wagmi-react-native';
 import { WagmiConfig } from 'wagmi';
-import { mainnet, polygon, arbitrum, polygonMumbai } from 'wagmi/chains';
+import { sepolia } from 'wagmi/chains';
 import HomePage from './src/pages/HomePage';
 
 const projectId = process.env.EXPO_PUBLIC_WALLETCONNECT_CLOUD_PROJECT_ID;
@@ -27,7 +27,7 @@ const metadata = {
 };
 
 // Chains that will be supported by the dApp
-const chains = [mainnet, polygon, polygonMumbai, arbitrum];
+const chains = [sepolia];
 
 // Create wagmi config
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });

@@ -1,7 +1,8 @@
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
-import { polygonMumbai } from 'wagmi/chains';
-import React from 'react';
+import { sepolia } from 'wagmi/chains';
+import React, { useEffect, useState } from 'react';
 import {
+  useAccount,
   useNetwork,
   usePrepareSendTransaction,
   useSendTransaction,
@@ -12,24 +13,35 @@ import { parseEther } from 'viem';
 
 export default function WalletActions() {
   const { chain } = useNetwork();
+  const { address } = useAccount();
+  const [message, setMessage] = useState('');
+
+  // Prepare message to be signed
+  useEffect(() => {
+    if (address) {
+      setMessage(
+        `Sign this message to prove you are the owner of this wallet: ${address}`,
+      );
+    }
+  }, [address]);
 
   // Ask the wallet to sign a message
   const { data: signedHash, signMessage } = useSignMessage({
-    message: 'Sign this message to prove you are the owner of this wallet',
+    message,
   });
 
   // Ask the wallet to send test MATIC on Polygon Mumbai testnet
   const { config } = usePrepareSendTransaction({
-    chainId: polygonMumbai.id,
+    chainId: sepolia.id,
     // Replace `to` with another address to receive the tokens
-    to: '0x9247Ab385Bee424db5B09B696864867a53A77f1A',
+    to: '0xfddD2b8D9aaf04FA583CCF604a2De12668200582',
     value: parseEther('0.001'),
   });
   const { data: txData, sendTransaction } = useSendTransaction(config);
 
   // Watch for transaction completion and show a success alert when done
   useWaitForTransaction({
-    chainId: polygonMumbai.id,
+    chainId: sepolia.id,
     hash: txData?.hash,
     onSuccess() {
       Alert.alert('Transaction succeeded!', '0.001 MATIC sent successfully');
@@ -44,17 +56,18 @@ export default function WalletActions() {
         </View>
       )}
 
+      {/* Add a button to sign the message */}
       <View style={styles.block}>
         <Button title="Sign message" onPress={() => signMessage()} />
       </View>
-
+      {/* 
       <View style={styles.block}>
         <Button
           title="Send 0.001 MATIC"
-          disabled={chain.id !== polygonMumbai.id}
+          disabled={chain?.id !== sepolia.id}
           onPress={() => sendTransaction()}
         />
-      </View>
+      </View> */}
     </>
   );
 }
